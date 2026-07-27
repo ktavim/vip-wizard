@@ -1,0 +1,13 @@
+// 127.0.0.1 rather than localhost: on Windows 11 localhost resolves ::1 first while uvicorn
+// binds IPv4, producing intermittent ECONNREFUSED that reads as a dead server.
+{
+  "/api/inventory": {
+    "target": "http://127.0.0.1:8100",
+    "changeOrigin": true,
+    "pathRewrite": { "^/api/inventory": "/api" }
+  },
+  "/api/deployment": {
+    "target": "http://127.0.0.1:9000",
+    "changeOrigin": true
+  }
+}
