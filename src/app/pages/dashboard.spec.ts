@@ -135,7 +135,7 @@ describe('Dashboard wizard navigation', () => {
     const vipNames = [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement>('input'),
     ].map((input) => input.value);
-    expect(vipNames).toEqual(['loginMicrosoftonline', 'ldapCorpInternal']);
+    expect(vipNames).toEqual(['LoginMicrosoftonline', 'LdapCorpInternal']);
   });
 
   it('stays on step 1 and shows the error when the hosts request fails', async () => {

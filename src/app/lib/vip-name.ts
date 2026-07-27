@@ -6,7 +6,7 @@
  */
 
 /**
- * Suffixes stripped off the tail of a hostname before camel-casing, because a public TLD says
+ * Suffixes stripped off the tail of a hostname before casing, because a public TLD says
  * nothing about what the VIP serves. Not the real Public Suffix List — that is thousands of
  * entries behind a file you have to keep refreshing — but the ccTLDs plus the generic TLDs
  * that actually turn up on service hosts, which is the coverage this needs.
@@ -42,10 +42,10 @@ const PUBLIC_SUFFIXES = new Set(
 const SECOND_LEVEL_SUFFIXES = new Set('co com net org edu gov ac mil or ne go gob nom'.split(' '));
 
 /**
- * Camel-cases a hostname into a VIP name, dropping a leading `www` label and any trailing
+ * Pascal-cases a hostname into a VIP name, dropping a leading `www` label and any trailing
  * public suffix (the parts that carry no information here) and treating `.`, `-` and `_` alike
- * as word breaks: `www.tax-service.gov` → `taxService`, `api.example.co.uk` → `apiExample`,
- * `vault.hashicorp.internal` → `vaultHashicorpInternal`.
+ * as word breaks: `www.tax-service.gov` → `TaxService`, `api.example.co.uk` → `ApiExample`,
+ * `vault.hashicorp.internal` → `VaultHashicorpInternal`.
  *
  * Never strips the last label standing: a bare internal hostname has no domain to fall back on,
  * and a two-letter one collides with a ccTLD (`db`, `ci`), so those must survive intact. Still
@@ -60,13 +60,13 @@ export function vipNameFromHost(host: string): string {
     if (labels.length > 1 && SECOND_LEVEL_SUFFIXES.has(labels[labels.length - 1])) labels.pop();
   }
   const words = labels.join('.').split(/[^a-z0-9]+/).filter(Boolean);
-  return words.map((w, i) => (i === 0 ? w : w[0].toUpperCase() + w.slice(1))).join('');
+  return words.map((w) => w[0].toUpperCase() + w.slice(1)).join('');
 }
 
 /**
- * Names one VIP per host, in order. Two hosts can camel-case to the same name (`stripe.com` and
- * `www.stripe.co.uk` both give `stripe`), and duplicate VIP names would collide as F5 object
- * names at deploy time, so repeats get a numeric suffix: `stripe`, `stripe2`, `stripe3`.
+ * Names one VIP per host, in order. Two hosts can reduce to the same name (`stripe.com` and
+ * `www.stripe.co.uk` both give `Stripe`), and duplicate VIP names would collide as F5 object
+ * names at deploy time, so repeats get a numeric suffix: `Stripe`, `Stripe2`, `Stripe3`.
  *
  * `fallback` supplies a name for hosts that reduce to nothing — the caller's `<app>-vip-<n>`
  * form — and is passed the host's index.
