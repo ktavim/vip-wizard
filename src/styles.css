@@ -93,9 +93,15 @@
 }
 
 /* Angular CDK drag-and-drop visuals (port of @hello-pangea/dnd drag states) */
+/* The preview is rendered in the top layer via `popover`, so the UA stylesheet's
+   `[popover]` rules apply: `padding: 0.25em` and `overflow: auto`. CDK sizes the
+   preview to the source element's border box, so that padding pushes the cloned
+   chip past the content box and the auto overflow renders scrollbars. Reset both. */
 .cdk-drag-preview {
   @apply rounded border border-primary/40 bg-card shadow-lg shadow-primary/10;
   box-sizing: border-box;
+  padding: 0;
+  overflow: hidden;
 }
 
 .cdk-drag-placeholder {
