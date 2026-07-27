@@ -9,6 +9,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ChevronDown, ChevronRight, LucideAngularModule, Plus, RotateCcw } from 'lucide-angular';
 import { AssignState, Host, Vip } from '../lib/models';
+import { seedVipNames } from '../lib/vip-name';
 import { ButtonDirective } from '../ui/button';
 import { HostChip } from './host-chip';
 import { VipCard } from './vip-card';
@@ -232,9 +233,13 @@ export class StepAssignHosts implements OnInit {
     }
     const app = this.appName();
     const hosts = this.hosts();
-    this.vips.set(
-      hosts.map((h, i) => ({ id: `vip-${i}`, name: `${app}-vip-${i + 1}`, hosts: [{ ...h }] })),
+    // Each VIP seeds with exactly one host, so name it after that host rather than its
+    // position. `addVip()` keeps the positional form — a new VIP has no host to name it after.
+    const names = seedVipNames(
+      hosts.map((h) => h.host),
+      (i) => `${app}-vip-${i + 1}`,
     );
+    this.vips.set(hosts.map((h, i) => ({ id: `vip-${i}`, name: names[i], hosts: [{ ...h }] })));
     this.nextVipId = hosts.length;
   }
 
