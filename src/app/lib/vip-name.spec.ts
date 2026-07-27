@@ -54,7 +54,7 @@ describe('vipNameFromHost', () => {
 });
 
 describe('seedVipNames', () => {
-  const fallback = (i: number) => `payroll-gateway-vip-${i + 1}`;
+  const fallback = (i: number) => `Vip${i + 1}`;
 
   it('names each VIP after its one host', () => {
     expect(seedVipNames(['api.adp.com', 'hr.internal.corp'], fallback)).toEqual([
@@ -72,9 +72,6 @@ describe('seedVipNames', () => {
   });
 
   it('falls back to the positional name for a host that reduces to nothing', () => {
-    expect(seedVipNames(['api.adp.com', 'www'], fallback)).toEqual([
-      'ApiAdp',
-      'payroll-gateway-vip-2',
-    ]);
+    expect(seedVipNames(['api.adp.com', 'www'], fallback)).toEqual(['ApiAdp', 'Vip2']);
   });
 });

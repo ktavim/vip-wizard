@@ -68,7 +68,7 @@ export function vipNameFromHost(host: string): string {
  * `www.stripe.co.uk` both give `Stripe`), and duplicate VIP names would collide as F5 object
  * names at deploy time, so repeats get a numeric suffix: `Stripe`, `Stripe2`, `Stripe3`.
  *
- * `fallback` supplies a name for hosts that reduce to nothing — the caller's `<app>-vip-<n>`
+ * `fallback` supplies a name for hosts that reduce to nothing — the caller's positional `Vip<n>`
  * form — and is passed the host's index.
  */
 export function seedVipNames(

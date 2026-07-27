@@ -231,13 +231,12 @@ export class StepAssignHosts implements OnInit {
       this.nextVipId = saved.nextVipId;
       return;
     }
-    const app = this.appName();
     const hosts = this.hosts();
     // Each VIP seeds with exactly one host, so name it after that host rather than its
     // position. `addVip()` keeps the positional form — a new VIP has no host to name it after.
     const names = seedVipNames(
       hosts.map((h) => h.host),
-      (i) => `${app}-vip-${i + 1}`,
+      (i) => `Vip${i + 1}`,
     );
     this.vips.set(hosts.map((h, i) => ({ id: `vip-${i}`, name: names[i], hosts: [{ ...h }] })));
     this.nextVipId = hosts.length;
@@ -269,10 +268,7 @@ export class StepAssignHosts implements OnInit {
 
   protected addVip(): void {
     const id = this.nextVipId;
-    this.vips.update((vs) => [
-      ...vs,
-      { id: `vip-${id}`, name: `${this.appName()}-vip-${id + 1}`, hosts: [] },
-    ]);
+    this.vips.update((vs) => [...vs, { id: `vip-${id}`, name: `Vip${id + 1}`, hosts: [] }]);
     this.nextVipId += 1;
   }
 
