@@ -6,7 +6,12 @@
     "changeOrigin": true,
     "pathRewrite": { "^/api/inventory": "/api" }
   },
-  "/api/deployment": {
+  // Key must match `deploymentApi.baseUrl` in environment.development.ts exactly — a
+  // near-miss here does not error, it just leaves the request unproxied and 404ing off
+  // the dev server. No pathRewrite yet: unlike the inventory service, the deploy service
+  // is still faked, so its route prefix has not been pinned down. Expect to need
+  // `"pathRewrite": { "^/api/deployments": "/api" }` if it mounts its router the same way.
+  "/api/deployments": {
     "target": "http://127.0.0.1:9000",
     "changeOrigin": true
   }

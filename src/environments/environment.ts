@@ -13,6 +13,6 @@ export const environment: Environment = {
   },
   deploymentApi: {
     baseUrl: 'https://deployment-api.prd.k8s',
-    useFake: false,
+    useFake: true,
   },
 };
