@@ -34,7 +34,7 @@ export const fakeBackendInterceptor: HttpInterceptorFn = (req, next) => {
   ];
 
   const service = services.find(
-    (candidate) => candidate.config.useFake && req.url.startsWith(candidate.config.baseUrl),
+    (candidate) => candidate.config.useFake && matchesBase(req.url, candidate.config.baseUrl),
   );
   if (!service) {
     return next(req);
@@ -47,6 +47,27 @@ export const fakeBackendInterceptor: HttpInterceptorFn = (req, next) => {
 
   return from(respond(req, path, handler, controls));
 };
+
+/**
+ * Prefix match, with a blank base URL rejected rather than treated as "matches everything".
+ *
+ * `''` is a prefix of every string, so a faked service left with an empty `baseUrl` would
+ * out-match the service the request was actually for — including a service already cut over
+ * to live — and then 404 it, since no handler matches an absolute URL. That failure reads as
+ * a dead endpoint (`[fake] ✗ GET https://…/apps/submitted → 404`) rather than as the config
+ * mistake it is, so name it here instead.
+ */
+function matchesBase(url: string, baseUrl: string): boolean {
+  if (baseUrl === '') {
+    console.error(
+      '[fake] A service has useFake: true with an empty baseUrl, so it is being skipped. ' +
+        'An empty baseUrl prefix-matches every request and would hijack the whole app. ' +
+        'Set that service\'s baseUrl in src/environments/, or set useFake: false.',
+    );
+    return false;
+  }
+  return url.startsWith(baseUrl);
+}
 
 async function respond(
   req: Parameters<HttpInterceptorFn>[0],
